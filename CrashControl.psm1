@@ -7,26 +7,22 @@ function Set-CrashAlwaysKeep {
 .EXAMPLE
    Set-CrashAlwaysKeep
 .EXAMPLE
-   Set-CrashAlwaysKeep -State Disabled
+   Set-CrashAlwaysKeep -Enabled
 #>
 [cmdletbinding(SupportsShouldProcess=$true,ConfirmImpact='Medium')]
 param(
     [Parameter()]
-    [ValidateSet('Enabled','Disabled')]
-    [string]$State = 'Enabled'
+    [switch]$Enabled
 )
-    $StateToValue = @{
-        Enabled  = 1
-        Disabled = 0
-    }
-
     $ItemProperty = @{
         Name  = 'AlwaysKeepMemoryDump'
-        Value = $StateToValue[$State]
+        Value = [int][bool]$Enabled
         Type  = 'DWord'
         Path  = 'HKLM:\System\CurrentControlSet\Control\CrashControl'
     }
-    if ($PSCmdlet.ShouldProcess($ItemProperty.Name, $('{0} ({1})' -f $State, $ItemProperty.Value))) {
+    
+    $Action = 'Set Value: {0} ({1})' -f $(if ($Enabled) {'Enabled'} else {'Disabled'}), $ItemProperty.Value
+    if ($PSCmdlet.ShouldProcess($ItemProperty.Name, $Action)) {
         Set-ItemProperty @ItemProperty -ErrorAction Stop
     }
 
@@ -48,31 +44,23 @@ function Set-CrashOnCtrlScroll {
 .EXAMPLE
    Set-CrashOnCtrlScroll
 .EXAMPLE
-   Set-CrashOnCtrlScroll -State Disabled -DeviceType USB
-.PARAMETER State
-    Defaults to Enabled
+   Set-CrashOnCtrlScroll -Enabled -DeviceType USB
 .PARAMETER DeviceType
     Defaults to All
 #>
 [cmdletbinding(SupportsShouldProcess=$true,ConfirmImpact='Medium')]
 param(
     [Parameter()]
-    [ValidateSet('Enabled','Disabled')]
-    [string]$State = 'Enabled',
+    [switch]$Enabled,
 
     [Parameter()]
     [ValidateSet('All', 'USB','PS2')]
     [string]$DeviceType = 'All'
 )
-    $StateToValue = @{
-        Enabled  = 1
-        Disabled = 0
-    }
-    
     $ItemProperty = @{
         Name  = 'CrashOnCtrlScroll'
         Type  = 'DWord'
-        Value = $StateToValue[$State]
+        Value = [int][bool]$Enabled
         Path  = ''
     }
 
@@ -87,10 +75,11 @@ param(
     else {
         $DeviceTypesToProcess = $DeviceKeys[$DeviceType]
     }
-
+    
     $DeviceTypesToProcess | ForEach-Object {
         $ItemProperty.Path  = $DeviceKeys[$_]
-        if ($PSCmdlet.ShouldProcess($ItemProperty.Name, $('{0} ({1})' -f $State, $ItemProperty.Value))) {
+        $Action = 'Set Value: {0} ({1})' -f $(if ($Enabled) {'Enabled'} else {'Disabled'}), $ItemProperty.Value
+        if ($PSCmdlet.ShouldProcess($ItemProperty.Name, $Action)) {
             Set-ItemProperty @ItemProperty -ErrorAction Stop
         }
     }
@@ -129,9 +118,9 @@ function Set-CrashDumpMode {
 param(
     [Parameter()]
     [ValidateSet('None','Complete','Kernel','Small','Automatic')]
-    [string]$State = 'Kernel'
+    [string]$Mode = 'Kernel'
 )
-    $StateToValue = @{
+    $ModeToValue = @{
         None      = 0
         Complete  = 1
         Kernel    = 2
@@ -141,11 +130,11 @@ param(
 
     $ItemProperty = @{
         Name  = 'CrashdumpEnabled'
-        Value = $StateToValue[$State]
+        Value = $ModeToValue[$State]
         Type  = 'DWord'
         Path  = 'HKLM:\System\CurrentControlSet\Control\CrashControl'
     }
-    if ($PSCmdlet.ShouldProcess($ItemProperty.Name, $('{0} ({1})' -f $State, $ItemProperty.Value))) {
+    if ($PSCmdlet.ShouldProcess($ItemProperty.Name, $('{0} ({1})' -f $Mode, $ItemProperty.Value))) {
         Set-ItemProperty @ItemProperty -ErrorAction Stop
     }
 
@@ -186,30 +175,24 @@ function Set-CrashNmiDump {
    To generate an NMI for a VMware VM see documentation here (KB2005715):
         http://kb.vmware.com/selfservice/search.do?cmd=displayKC&docType=kc&docTypeID=DT_KB_1_1&externalId=2005715
 .EXAMPLE
-   Set-CrashNmiDump -State Disabled
+   Set-CrashNmiDump -Enabled
 .EXAMPLE
    Set-CrashNmiDump
-.PARAMETER State
-    Defaults to Enabled.
 #>
 [cmdletbinding(SupportsShouldProcess=$true,ConfirmImpact='Medium')]
 param(
     [Parameter()]
-    [ValidateSet('Enabled','Disabled')]
-    [string]$State = 'Enabled'
+    [switch]$Enabled
 )
-    $StateToValue = @{
-        Enabled  = 1
-        Disabled = 0
-    }
-
     $ItemProperty = @{
         Name  = 'NMICrashDump'
-        Value = $StateToValue[$State]
+        Value = [int][bool]$Enabled
         Type  = 'DWord'
         Path  = 'HKLM:\System\CurrentControlSet\Control\CrashControl'
     }
-    if ($PSCmdlet.ShouldProcess($ItemProperty.Name, $('{0} ({1})' -f $State, $ItemProperty.Value))) {
+    
+    $Action = 'Set Value: {0} ({1})' -f $(if ($Enabled) {'Enabled'} else {'Disabled'}), $ItemProperty.Value
+    if ($PSCmdlet.ShouldProcess($ItemProperty.Name, $Action)) {
         Set-ItemProperty @ItemProperty -ErrorAction Stop
     }
 
