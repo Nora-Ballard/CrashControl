@@ -85,20 +85,34 @@ Function Test-TargetResource
 
     $TestResult = $true
 
-    if ((Get-CrashDumpMode) -ne $CrashDumpMode) { 
+    $_CrashDumpMode = Get-CrashDumpMode
+    Write-Debug ('CrashDumpMode = {0}' -f $_CrashDumpMode)
+    if ($_CrashDumpMode -ne $CrashDumpMode) { 
+        Write-Verbose "Tests failed on CrashDumpMode setting."
         $TestResult = $false 
     }
 
-    if ((Get-CrashAlwaysKeep) -ne $EnabledDisabledtoBool[$AlwaysKeepMemoryDump]) {
+    $_AlwaysKeepMemoryDump = Get-CrashAlwaysKeep
+    Write-Debug ('AlwaysKeepMemoryDump = {0}' -f $_AlwaysKeepMemoryDump)
+
+    if ($_AlwaysKeepMemoryDump -ne $EnabledDisabledtoBool[$AlwaysKeepMemoryDump]) {
+        Write-Verbose "Tests failed on AlwaysKeepMemoryDump setting."
         $TestResult = $false
     }
 
-    if (((Get-CrashOnCtrlScroll).PS2 -ne $EnabledDisabledtoBool[$CrashOnCtrlScroll]) -and 
-        ((Get-CrashOnCtrlScroll).USB -ne $EnabledDisabledtoBool[$CrashOnCtrlScroll])) {
+    $_CrashOnCtrlScroll = Get-CrashOnCtrlScroll
+    Write-Debug ('CrashOnCtrlScroll for USB Keyboards = {0}' -f $_CrashOnCtrlScroll.USB)
+    Write-Debug ('CrashOnCtrlScroll for PS2 Keyboards = {0}' -f $_CrashOnCtrlScroll.PS2)
+
+    if (($_CrashOnCtrlScroll.PS2 -ne $EnabledDisabledtoBool[$CrashOnCtrlScroll]) -and 
+        ($_CrashOnCtrlScroll.USB -ne $EnabledDisabledtoBool[$CrashOnCtrlScroll])) {
+        Write-Verbose "Tests failed on CrashOnCtrlScroll setting."
         $TestResult = $false
     }
 
-    if ((Get-CrashNmiDump) -ne $EnabledDisabledtoBool[$NMICrashDump]) {
+    $_NMICrashDump = Get-CrashNmiDump
+    if ($_NMICrashDump -ne $EnabledDisabledtoBool[$NMICrashDump]) {
+        Write-Verbose "Tests failed on NMICrashDump setting."
         $TestResult = $false
     }
 
