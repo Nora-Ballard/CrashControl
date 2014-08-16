@@ -1,15 +1,17 @@
 CrashControl
 ============
 
-A quick module for setting Windows Crash Dump settings.
+A quick module for setting Windows Crash Dump settings. 
 
-##(Get|Set)-CrashAlwaysKeep
+Made possible by Bruce Mackenzie-Low's talk on Windows Debugging at Techmentor 2014. 
+
+###(Get|Set)-CrashAlwaysKeep
 
 When enabled this setting forces Windows 7 to keep the crash dump even if free space is low. By default Windows 7 will, under certain conditions, not create a MEMORY.dmp file.
 
 For more info see: http://blogs.msdn.com/b/wer/archive/2009/02/09/kernel-dump-storage-and-clean-up-behavior-in-windows-7.aspx
 
-##(Get|Set)-CrashOnCtrlScroll 
+###(Get|Set)-CrashOnCtrlScroll 
 
 When enabled Windows will generate a crash dump when the 'Right‐Ctrl + Scroll Lock (twice)' keystroke is pressed.
 
@@ -17,13 +19,13 @@ Allows you to force a system memory dump from a keyboard. By default this functi
 
 For more info see: http://msdn.microsoft.com/en-us/library/windows/hardware/ff545499(v=vs.85).aspx
 
-##(Get|Set)-CrashDumpMode  
+###(Get|Set)-CrashDumpMode  
 
 Sets the method of crash dump generation; 'None','Complete','Kernel','Small','Automatic'
 
 For more info see: [Microsoft KB254649](http://support.microsoft.com/kb/254649)
 
-##(Get|Set)-CrashNmiDump 
+###(Get|Set)-CrashNmiDump 
 
 Controls whether Windows responds to an Non-Maskable Interrupt (NMI) for generating a crash dump. (Microsoft KB927069)
 
