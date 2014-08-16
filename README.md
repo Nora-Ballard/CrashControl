@@ -39,3 +39,8 @@ For more info see: [Microsoft KB927069](http://support.microsoft.com/kb/927069)
         debug‐vm “VM 1" ‐InjectNonMaskableInterrupt –Force
 
    To generate an NMI for a VMware VM see documentation here ([KB2005715](http://kb.vmware.com/selfservice/search.do?cmd=displayKC&docType=kc&docTypeID=DT_KB_1_1&externalId=2005715))
+
+###Notes on crash dumps:
+* Forcing a crash dump using keystroke or NMI is a good way to get a dmp file to analyze when the system is in a partially functional hang state.
+* Some BIOS have an 'Automatic Server Recovery' setting which tries to detect if OS is live and resets. This will often interrupt the memory dump generation, and can be disabled to get a full dmp.
+* A truncated dump file may still have usefull information. 
