@@ -27,13 +27,11 @@ For more info see: [Microsoft KB254649](http://support.microsoft.com/kb/254649)
 
 ###(Get|Set)-CrashNmiDump 
 
-Controls whether Windows responds to an Non-Maskable Interrupt (NMI) for generating a crash dump. (Microsoft KB927069)
-
- Enables or Disables the 'HKLM:\System\CurrentControlSet\Control\CrashControl\NMICrashDump' registry setting.
-
-   Enabling tells windows to respond to a NMI signal from the hardware, which results in a Stop 0x80 bugcheck (NMI_HARDWARE_FAILURE)
+Enabling allows Windows to respond to a Non-Maskable Interrupt NMI signal from the hardware, which results in a Stop 0x80 bugcheck (NMI_HARDWARE_FAILURE)
 
    Windows Server 2012 & Windows 8 do not require NMICrashDump to be set.
+
+For more info see: [Microsoft KB927069](http://support.microsoft.com/kb/927069)
 
    To generate an NMI on HP Hardware use the button on the system's iLO diagnostics page.
 
