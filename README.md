@@ -39,5 +39,5 @@ Controls whether Windows responds to an Non-Maskable Interrupt (NMI) for generat
    To generate an NMI for a Hyper-V VM:
         debug‐vm “VM 1" ‐InjectNonMaskableInterrupt –Force
 
-   To generate an NMI for a VMware VM see documentation here (KB2005715):
+   To generate an NMI for a VMware VM see documentation here ([KB2005715](http://kb.vmware.com/selfservice/search.do?cmd=displayKC&docType=kc&docTypeID=DT_KB_1_1&externalId=2005715)):
         http://kb.vmware.com/selfservice/search.do?cmd=displayKC&docType=kc&docTypeID=DT_KB_1_1&externalId=2005715
