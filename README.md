@@ -1,7 +1,7 @@
 CrashControl
 ============
 
-A quick module for setting Windows Crash Dump settings. 
+A quick module for setting Windows Crash Dump settings. To be followed by a DSC Resource that configures the same.
 
 Made possible and inspired by Bruce Mackenzie-Low's talk on Windows Debugging at Techmentor 2014. 
 
