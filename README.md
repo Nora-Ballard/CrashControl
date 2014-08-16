@@ -3,7 +3,7 @@ CrashControl
 
 A quick module for setting Windows Crash Dump settings. 
 
-Made possible by Bruce Mackenzie-Low's talk on Windows Debugging at Techmentor 2014. 
+Made possible and inspired by Bruce Mackenzie-Low's talk on Windows Debugging at Techmentor 2014. 
 
 ###(Get|Set)-CrashAlwaysKeep
 
