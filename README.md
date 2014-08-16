@@ -33,11 +33,9 @@ Controls whether Windows responds to an Non-Maskable Interrupt (NMI) for generat
 
    Windows Server 2012 & Windows 8 do not require NMICrashDump to be set.
 
-   To generate and NMI on HP Hardware see the documentation here:
-        http://h20195.www2.hp.com/V2/GetDocument.aspx?docname=4AA4‐7853ENW&cc=us&lc=en
+   To generate an NMI on HP Hardware use the button on the system's iLO diagnostics page.
 
    To generate an NMI for a Hyper-V VM:
         debug‐vm “VM 1" ‐InjectNonMaskableInterrupt –Force
 
-   To generate an NMI for a VMware VM see documentation here ([KB2005715](http://kb.vmware.com/selfservice/search.do?cmd=displayKC&docType=kc&docTypeID=DT_KB_1_1&externalId=2005715)):
-        http://kb.vmware.com/selfservice/search.do?cmd=displayKC&docType=kc&docTypeID=DT_KB_1_1&externalId=2005715
+   To generate an NMI for a VMware VM see documentation here ([KB2005715](http://kb.vmware.com/selfservice/search.do?cmd=displayKC&docType=kc&docTypeID=DT_KB_1_1&externalId=2005715))
