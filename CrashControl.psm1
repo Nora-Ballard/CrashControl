@@ -111,7 +111,7 @@ function Set-CrashDumpMode {
    Set-CrashDumpMode -State Small
 .EXAMPLE
    Set-CrashDumpMode
-.PARAMETER State
+.PARAMETER Mode
     Defaults to Kernel Mode type.
 #>
 [cmdletbinding(SupportsShouldProcess=$true,ConfirmImpact='Medium')]
@@ -130,7 +130,7 @@ param(
 
     $ItemProperty = @{
         Name  = 'CrashdumpEnabled'
-        Value = $ModeToValue[$State]
+        Value = $ModeToValue[$Mode]
         Type  = 'DWord'
         Path  = 'HKLM:\System\CurrentControlSet\Control\CrashControl'
     }
