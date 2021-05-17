@@ -23,7 +23,7 @@ VMware VM | See [KB2005715](http://kb.vmware.com/selfservice/search.do?cmd=displ
 
 ## Usage
 
-### (Get|Set)-CrashAlwaysKeep
+### CrashAlwaysKeep
 
 When `CrashAlwaysKeep` is enabled, Windows is forced to keep the `MEMORY.dmp` crash dump file, even if free space is low.
 
@@ -41,7 +41,7 @@ Set-CrashAlwaysKeep -Enabled
 Set-CrashAlwaysKeep
 ```
 
-### (Get|Set)-CrashOnCtrlScroll 
+### CrashOnCtrlScroll 
 
 When `CrashOnCtrlScroll` is enabled, Windows will generate a crash dump when the `Right‐Ctrl + Scroll Lock (twice)` keystroke is pressed. This value must be configured separately for each type of keyboard that will be used.
 
@@ -76,12 +76,15 @@ Set-CrashOnCtrlScroll -Enabled; Restart-Computer
 Set-CrashOnCtrlScroll; Restart-Computer
 ```
 
-### (Get|Set)-CrashDumpMode  
+### CrashDumpMode  
 
 Sets the method of crash dump generation: `None`, `Complete`, `Kernel`, `Small`, `Automatic`
 
 #### Examples
 ```powershell
+# Get current settings
+Get-CrashDumpMode
+
 # Set the mode to Small
 Set-CrashDumpMode -State 'Small'
 
@@ -89,7 +92,7 @@ Set-CrashDumpMode -State 'Small'
 Set-CrashDumpMode
 ```
 
-### (Get|Set)-CrashNmiDump 
+### CrashNmiDump 
 
 In Windows version prior to Windows Server 2012 or Windows 8, this controls whether Windows will respond to respond to a `Non-Maskable Interrupt (NMI)` signal from the hardware. 
 
@@ -97,6 +100,9 @@ Issues: `0x80 bugcheck (NMI_HARDWARE_FAILURE)`
 
 #### Examples
 ```powershell
+# Get Current Settings
+Get-CrashNmiDump
+
 # Enable
 Set-CrashNmiDump -Enabled
 
