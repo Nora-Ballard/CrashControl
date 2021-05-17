@@ -1,46 +1,117 @@
-CrashControl
-============
+# CrashControl
 
-A quick module for setting Windows Crash Dump settings. To be followed by a DSC Resource that configures the same.
+A module for setting Windows Crash Dump settings.
 
-Made possible and inspired by Bruce Mackenzie-Low's talk on Windows Debugging at Techmentor 2014. 
+This module was inspired and informed by Bruce Mackenzie-Low's talk on 'Windows Debugging' at 'Techmentor 2014'. 
 
-###(Get|Set)-CrashAlwaysKeep
+## Notes on crash dumps:
+- When a system is in a partially functional or hung state, a good way to get a `.dmp` file to analyze is to force a crash dump using keystroke or NMI
+- Some BIOS have an `Automatic Server Recovery` or `Watchdog` setting which tries to detect if OS is live and resets. This will often interrupt the memory dump generation. If you encounter this, then disabling this setting can allow you to get a full dump.
+- A truncated dump file may still have usefull information. 
 
-When enabled this setting forces Windows 7 to keep the crash dump even if free space is low. By default Windows 7 will, under certain conditions, not create a MEMORY.dmp file.
+## Non-Maskable Interrupt (NMI)
+This is a signal, sent from the system hardware, which triggers a crash dump. This is used in cases where a keyboard may not be available. Such as, from a BMC or hypervisor remote console.
 
-For more info see: http://blogs.msdn.com/b/wer/archive/2009/02/09/kernel-dump-storage-and-clean-up-behavior-in-windows-7.aspx
+### Triggering an NMI signal
 
-###(Get|Set)-CrashOnCtrlScroll 
+Type | Method
+---- | ------
+HP iLO | Use the button on the system's iLO diagnostics page. 
+Hyper-V VM | Powershell command: `Debug‐Vm “VM 1" ‐InjectNonMaskableInterrupt –Force`
+VMware VM | See [KB2005715](http://kb.vmware.com/selfservice/search.do?cmd=displayKC&docType=kc&docTypeID=DT_KB_1_1&externalId=2005715) and follow the instructions for your version
 
-When enabled Windows will generate a crash dump when the 'Right‐Ctrl + Scroll Lock (twice)' keystroke is pressed.
 
-Allows you to force a system memory dump from a keyboard. By default this function will enable the option for both USB and PS2 keyboards.
+## Usage
 
-For more info see: http://msdn.microsoft.com/en-us/library/windows/hardware/ff545499(v=vs.85).aspx
+### (Get|Set)-CrashAlwaysKeep
 
-###(Get|Set)-CrashDumpMode  
+When `CrashAlwaysKeep` is enabled, Windows is forced to keep the `MEMORY.dmp` crash dump file, even if free space is low.
 
-Sets the method of crash dump generation; 'None','Complete','Kernel','Small','Automatic'
+In Windows 7 the alogrithm for crash dump creation was updated. The default behavior is to delete the `MEMORY.dmp` crash dump file, if the machine is joined to a domain and the free space is below 25GB.
 
-For more info see: [Microsoft KB254649](http://support.microsoft.com/kb/254649)
+####Example
+```powershell
+# Get Current Settings
+Get-CrashAlwaysKeep
 
-###(Get|Set)-CrashNmiDump 
+# Enable
+Set-CrashAlwaysKeep -Enabled
 
-Enabling allows Windows to respond to a Non-Maskable Interrupt NMI signal from the hardware, which results in a Stop 0x80 bugcheck (NMI_HARDWARE_FAILURE)
+# Disable (default)
+Set-CrashAlwaysKeep
+```
 
-   Windows Server 2012 & Windows 8 do not require NMICrashDump to be set.
+### (Get|Set)-CrashOnCtrlScroll 
 
-For more info see: [Microsoft KB927069](http://support.microsoft.com/kb/927069)
+When `CrashOnCtrlScroll` is enabled, Windows will generate a crash dump when the `Right‐Ctrl + Scroll Lock (twice)` keystroke is pressed. This value must be configured separately for each type of keyboard that will be used.
 
-   To generate an NMI on HP Hardware use the button on the system's iLO diagnostics page.
+Issues: `0xE2 (MANUALLY_INITIATED_CRASH)`
 
-   To generate an NMI for a Hyper-V VM:
-        debug‐vm “VM 1" ‐InjectNonMaskableInterrupt –Force
+### Supported Keyboard Types:
 
-   To generate an NMI for a VMware VM see documentation here ([KB2005715](http://kb.vmware.com/selfservice/search.do?cmd=displayKC&docType=kc&docTypeID=DT_KB_1_1&externalId=2005715))
+Type | OS Supported | Service | Module Support
+---- | ------------ | ------- | --------------
+PS/2 | Windows 2000 and later | i8042prt | Yes
+USB | Windows Vista and Later | kbdhid | Yes
+Hyper-V | Windows 10 version 1903 and later | hyperkbd | No
 
-###Notes on crash dumps:
-* Forcing a crash dump using keystroke or NMI is a good way to get a dmp file to analyze when the system is in a partially functional hang state.
-* Some BIOS have an 'Automatic Server Recovery' setting which tries to detect if OS is live and resets. This will often interrupt the memory dump generation, and can be disabled to get a full dmp.
-* A truncated dump file may still have usefull information. 
+You must restart the system for these settings to take effect.
+
+#### TODO
+- Add prompt for restart, and a warning that restart is required.
+- Support [alternate shortcuts](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/forcing-a-system-crash-from-the-keyboard?redirectedfrom=MSDN#defining-alternate-keyboard-shortcuts-to-force-a-system-crash-from-the-keyboard)
+
+#### Example:
+```powershell
+# Get Current Settings
+Get-CrashOnCtrlScroll
+
+# Enable on USB keyboard
+Set-CrashOnCtrlScroll -Enabled -DeviceType 'USB'; Restart-Computer
+
+# Enable on USB and PS2 keyboards
+Set-CrashOnCtrlScroll -Enabled; Restart-Computer
+
+# Disable on USB and PS2 keyboards (Restore default)
+Set-CrashOnCtrlScroll; Restart-Computer
+```
+
+### (Get|Set)-CrashDumpMode  
+
+Sets the method of crash dump generation: `None`, `Complete`, `Kernel`, `Small`, `Automatic`
+
+#### Examples
+```powershell
+# Set the mode to Small
+Set-CrashDumpMode -State 'Small'
+
+# Set the mode to Kernel (default)
+Set-CrashDumpMode
+```
+
+### (Get|Set)-CrashNmiDump 
+
+In Windows version prior to Windows Server 2012 or Windows 8, this controls whether Windows will respond to respond to a `Non-Maskable Interrupt (NMI)` signal from the hardware. 
+
+Issues: `0x80 bugcheck (NMI_HARDWARE_FAILURE)`
+
+#### Examples
+```powershell
+# Enable
+Set-CrashNmiDump -Enabled
+
+# Disable (default)
+Set-CrashNmiDump
+```
+
+## References
+[Kernel Dump Storage and Clean-up Behavior in Windows 7](https://web.archive.org/web/20100822214802/http://blogs.msdn.com/b/wer/archive/2009/02/09/kernel-dump-storage-and-clean-up-behavior-in-windows-7.aspx)
+
+[Forcing a System Crash from the Keyboard](http://msdn.microsoft.com/en-us/library/windows/hardware/ff545499(v=vs.85).aspx)
+
+[Generate Kernel or Complete Crash Dump: Use NMI](https://docs.microsoft.com/en-US/windows/client-management/generate-kernel-or-complete-crash-dump#use-nmi)
+
+[Microsoft KB254649](http://support.microsoft.com/kb/254649)
+
+Bruce Mackenzie-Low's talk on 'Windows Debugging' at 'Techmentor 2014'
+
